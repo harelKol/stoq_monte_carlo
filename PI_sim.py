@@ -5,7 +5,7 @@ from PI_hamiltonian import Hamiltonian
 
 
 class PI_simulator:
-    def __init__(self, H: Hamiltonian, m, b, num_samples, first_num_mc_iter, num_mc_iter, debug=False):
+    def __init__(self, H: Hamiltonian, m, b, num_samples, first_num_mc_iter, num_mc_iter, debug=False, save_paths=False):
         '''
         should be additional simulation params
         H : Hamiltonian class 
@@ -13,6 +13,7 @@ class PI_simulator:
         b : inverse temperature 
         '''
         self.debug = debug 
+        self.save_paths = save_paths
         self.H = H 
         self.m = m
         self.b = b
@@ -49,7 +50,8 @@ class PI_simulator:
         for i in iter:
             self.metropolis()
             avg_op += self.path.calc_path_op() / self.num_samples
-            #self.debug_arr.append(self.path.path[0,0])
+            if self.save_paths:
+                self.debug_arr.append(self.path.path)
         return avg_op
     
     def calc_op_arr(self):

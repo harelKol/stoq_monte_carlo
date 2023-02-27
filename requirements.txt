@@ -1,0 +1,31 @@
+brotlipy @ file:///Users/runner/miniforge3/conda-bld/brotlipy_1636012319596/work
+certifi==2021.10.8
+cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1636046173594/work
+charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1644853463426/work
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1602866480661/work
+conda==4.12.0
+conda-package-handling @ file:///Users/runner/miniforge3/conda-bld/conda-package-handling_1636022092101/work
+cryptography @ file:///Users/runner/miniforge3/conda-bld/cryptography_1639699578867/work
+cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1635519461629/work
+fonttools==4.29.1
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1642433548627/work
+kiwisolver==1.3.2
+matplotlib @ file:///Users/runner/miniforge3/conda-bld/matplotlib-suite_1639359043885/work
+munkres==1.1.4
+numpy==1.22.2
+packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1637239678211/work
+Pillow==9.0.1
+pycosat @ file:///Users/runner/miniforge3/conda-bld/pycosat_1636020570107/work
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
+pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1643496850550/work
+pyparsing==3.0.7
+PySocks @ file:///Users/runner/miniforge3/conda-bld/pysocks_1635862736740/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1641580202195/work
+ruamel-yaml-conda @ file:///Users/runner/miniforge3/conda-bld/ruamel_yaml_1636009262461/work
+scipy==1.8.0
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+tornado @ file:///Users/runner/miniforge3/conda-bld/tornado_1648827299372/work
+tqdm==4.64.1
+unicodedata2 @ file:///Users/runner/miniforge3/conda-bld/unicodedata2_1649111974586/work
+urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1641584929973/work

@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.DS_Store
+trytry.py
+try.py
+path_to_animate.pickle
