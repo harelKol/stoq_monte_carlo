@@ -2,7 +2,7 @@ import numpy as np
 from utils import n_kron, get_hamiltonian_matrices
 from constants import consts 
 
-def gt_pers_curr(I, C, L, x0, px, curr_qubit, N, x_max, n_keep, b):
+def gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b):
     p_ex = np.array([1,1]) * px #external josephson flux, in units of flux quanta
 
     C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
@@ -70,6 +70,5 @@ if __name__ == '__main__':
     x_max = 0.5 * consts.p0 #maximum flux for each squid
     n_keep = 5
     px = 0.67
-    qubit_num = 0
     avg_curr = gt_pers_curr(I,C,L,x0,px,qubit_num, N, x_max, n_keep, b)
     print(avg_curr)

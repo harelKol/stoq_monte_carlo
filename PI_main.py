@@ -36,7 +36,7 @@ def main(px):
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
     sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
     avg_curr = sim.calc_op()
-    print(avg_curr)
+    return avg_curr
     
     # first_q = np.array([H.axis[sim.debug_arr[i][0]] - x0[0] for i in range(len(sim.debug_arr))]) * (1e6 / consts.mult_const)
     # second_q = np.array([H.axis[sim.debug_arr[i][1]] - x0[1] for i in range(len(sim.debug_arr))]) * (1e6 / consts.mult_const)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     # for px in pxs:
     #     avgs.append(main(px))
     # res = {'pxs':pxs,'avgs':avgs}
-    # with open('m_200'+'.pickle','wb') as handle:
+    # with open('m_150'+'.pickle','wb') as handle:
     #     pickle.dump(res, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     main(0.67)
