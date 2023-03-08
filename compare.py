@@ -30,6 +30,7 @@ for px in pxs:
     N = 51 #number of flux discreitization points
     x_max = 0.5 * consts.p0 #maximum flux for each squid
     b = 4
+    n_keep = 5
     num_samples = 10000 #5000
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
