@@ -130,5 +130,8 @@ dmypy.json
 .DS_Store
 trytry.py
 try.py
+try2.py
+two_qubits.pickle
 path_to_animate.pickle
+read_plot.py
 my_env/

@@ -6,7 +6,7 @@ from PI_sim import PI_simulator
 import matplotlib.pyplot as plt 
 
 import time 
-def main(px):
+def main2(px):
     #define circuits params
     I = np.array([3.227,3.157]) * (1e-6) #Josephson current vector
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # with open('m_150'+'.pickle','wb') as handle:
     #     pickle.dump(res, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    main(0.67)
+    main2(0.67)
     
     
 

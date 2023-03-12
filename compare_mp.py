@@ -5,10 +5,26 @@ from constants import consts
 from PI_hamiltonian import Hamiltonian 
 from PI_sim import PI_simulator 
 import pickle
+from multiprocessing import Pool, freeze_support
+from functools import partial
+
+def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, n_keep):
+    p_ex = np.ones(len(I)) * px 
+    C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
+
+    C_inv *= consts.mult_const
+    L_inv *= consts.mult_const
+    Ej *= consts.mult_const
+
+    
+    H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
+    sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
+    avg_PI_curr = sim.calc_op()
+    avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
+    return avg_PI_curr, avg_gt_curr
+
 def compare_2_qubit():
     pxs = [0., 0.2, 0.4, 0.6, 0.663, 0.67, 0.68, 0.7, 0.73, 0.8, 0.9, 1.]
-    avg_PI = []
-    avg_gt = []
     I = np.array([3.227,3.157]) * (1e-6) #Josephson current vector
 
     C = np.array([[119.5, 132],
@@ -27,21 +43,12 @@ def compare_2_qubit():
     num_mc_iter = 2000 #5000
     m = 150
 
-    for px in pxs:
-        p_ex = np.array([1,1]) * px 
-        C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
-
-        C_inv *= consts.mult_const
-        L_inv *= consts.mult_const
-        Ej *= consts.mult_const
-
-    
-        H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-        avg_PI_curr = sim.calc_op()
-        avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
-        avg_PI.append(avg_PI_curr)
-        avg_gt.append(avg_gt_curr)
+    G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
+    with Pool() as p:
+        out = p.map(G, pxs)
+    avg_PI = [x[0] for x in out]
+    avg_gt = [x[1] for x in out]
     config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 'num_mc_iter':num_mc_iter}
     res = {'pxs':pxs, 'gt_res':avg_gt, 'PI_res':avg_PI}
     dicts = [config, res] 
@@ -50,8 +57,6 @@ def compare_2_qubit():
 
 def compare_4_qubit():
     pxs = [0., 0.2, 0.4, 0.6, 0.663, 0.67, 0.68, 0.7, 0.73, 0.8, 0.9, 1.]
-    avg_PI = []
-    avg_gt = []
     I = np.array([3.227, 3.227, 3.227, 3.227]) * (1e-6)
 
 
@@ -76,21 +81,13 @@ def compare_4_qubit():
     num_mc_iter = 2000 #5000
     m = 150
 
-    for px in pxs:
-        p_ex = np.array([1,1,1,1]) * px 
-        C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
+    G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
+    with Pool() as p:
+        out = p.map(G, pxs)
+    avg_PI = [x[0] for x in out]
+    avg_gt = [x[1] for x in out]
 
-        C_inv *= consts.mult_const
-        L_inv *= consts.mult_const
-        Ej *= consts.mult_const
-
-    
-        H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-        avg_PI_curr = sim.calc_op()
-        avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
-        avg_PI.append(avg_PI_curr)
-        avg_gt.append(avg_gt_curr)
     config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 'num_mc_iter':num_mc_iter}
     res = {'pxs':pxs, 'gt_res':avg_gt, 'PI_res':avg_PI}
     dicts = [config, res] 
@@ -99,7 +96,9 @@ def compare_4_qubit():
 
 
 if __name__ == '__main__':
+    freeze_support()
     compare_4_qubit()
+
 
 
 

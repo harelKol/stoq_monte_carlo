@@ -3,8 +3,8 @@ from utils import n_kron, get_hamiltonian_matrices
 from constants import consts 
 
 def gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b):
-    p_ex = np.array([1,1]) * px #external josephson flux, in units of flux quanta
-
+    num_qubits = len(I)
+    p_ex = np.ones(num_qubits) * px #external josephson flux, in units of flux quanta
     C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
 
     C_inv *= consts.mult_const
@@ -38,7 +38,7 @@ def gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b):
                 H += -C_inv[i,j] * n_kron([ps_proj[k] if k == i or k == j else np.eye(n_keep) for k in range(num_qubits)])
             if L_inv[i,j] != 0:
                 H += L_inv[i,j] * n_kron([xs_proj[k] if k == i or k == j else np.eye(n_keep) for k in range(num_qubits)])
-    full_x_ops = np.zeros((num_qubits,n_keep**2, n_keep**2))
+    full_x_ops = np.zeros((num_qubits,n_keep**num_qubits, n_keep**num_qubits))
     for i in range(num_qubits):
         full_x_ops[i,:,:] = n_kron(xs_proj[k] if k == i else np.eye(n_keep) for k in range(num_qubits))
     ops = np.einsum('ij, jkl -> ikl', L_inv, full_x_ops)
@@ -54,7 +54,7 @@ def gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b):
         avg_ops.append(avg_op)
     return avg_ops
 
-if __name__ == '__main__':
+def gt_2_qubit_example():
     I = np.array([3.227,3.157]) * (1e-6) #Josephson current vector
 
 
@@ -68,7 +68,34 @@ if __name__ == '__main__':
     b = 4
     N = 51 #number of flux discreitization points
     x_max = 0.5 * consts.p0 #maximum flux for each squid
-    n_keep = 5
+    n_keep = 10
     px = 0.67
-    avg_curr = gt_pers_curr(I,C,L,x0,px,qubit_num, N, x_max, n_keep, b)
+    avg_curr = gt_pers_curr(I,C,L,x0,px, N, x_max, n_keep, b)
     print(avg_curr)
+
+def gt_4_qubit_example():
+    I = np.array([3.227, 3.227, 3.227, 3.227]) * (1e-6)
+
+    C = np.array([[119.5, 80, 0, 80],
+                  [80, 120, 80, 0],
+                  [0, 80, 120.5, 80],
+                  [80, 0, 80, 121]]) * (1e-15)
+
+    L = np.array([[231.9, 0.5, 0, 0.5],
+                  [0.5, 232, 0.5, 0],
+                  [0, 0.5, 231, 0.5],
+                  [0.5, 0, 0.5, 230]]) * (1e-12) 
+
+    x0 = np.array([0.0005, 0.0005, 0.0005, 0.0005]) * consts.p0
+
+    px = 0.9
+    b = 4
+    N = 51 #number of flux discreitization points
+    x_max = 0.5 * consts.p0 #maximum flux for each squid
+    n_keep = 5
+    avg_curr = gt_pers_curr(I,C,L,x0,px, N, x_max, n_keep, b)
+    print(avg_curr)
+
+
+if __name__ == '__main__':
+    gt_4_qubit_example()
