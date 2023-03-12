@@ -46,7 +46,7 @@ def compare_2_qubit():
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
                   first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
-    with Pool() as p:
+    with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]
     avg_gt = [x[1] for x in out]
@@ -84,7 +84,7 @@ def compare_4_qubit():
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
                   first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
-    with Pool() as p:
+    with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]
     avg_gt = [x[1] for x in out]
