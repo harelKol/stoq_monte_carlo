@@ -7,6 +7,7 @@ from PI_sim import PI_simulator
 import pickle
 from multiprocessing import Pool, freeze_support
 from functools import partial
+import sys 
 
 def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, n_keep):
     p_ex = np.ones(len(I)) * px 
@@ -97,7 +98,15 @@ def compare_4_qubit():
 
 if __name__ == '__main__':
     freeze_support()
-    compare_4_qubit()
+    cmd = sys.argv[1]
+    if cmd == '2_qubit':
+        compare_2_qubit()
+        print('2 qubit')
+    elif cmd == '4_qubit':
+        compare_4_qubit()
+    else:
+        print('invalid cmd')
+    
 
 
 
