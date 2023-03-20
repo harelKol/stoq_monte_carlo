@@ -104,7 +104,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
+my_env/
 venv/
 ENV/
 env.bak/
@@ -134,4 +134,7 @@ try2.py
 two_qubits.pickle
 path_to_animate.pickle
 read_plot.py
-my_env/
+plot.py
+two_qubits_2.pickle
+two_qubits_2.png
+
