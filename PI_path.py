@@ -6,7 +6,7 @@ import time
 
 class PI_path_closed:
 
-    def __init__(self, m, H: Hamiltonian, b, debug=False):
+    def __init__(self, m, H: Hamiltonian, b, shift, debug=False):
         self.debug = debug 
         self.m = m 
         self.H = H
@@ -18,7 +18,7 @@ class PI_path_closed:
         self.exp_c_mat = [expm(-(b/m) * self.H.C_inv[i,i] * p2 / 2) for i in range(self.num_qubits)]
 
         self.path = np.ones((m + 1, H.num_qubits), dtype = int) * (self.N // 2)
-        self.shift = 20
+        self.shift = shift
         self.v_weight_arr, self.p_weight_arr = self.calc_weight_arr(self.path)
     
     def local_update(self):

@@ -33,9 +33,10 @@ def main2(px):
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
     m = 150
+    shift = 20
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-    sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-    avg_curr = sim.calc_op()
+    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+    avg_curr = sim.calc_op(num_samples)
     return avg_curr
     
     # first_q = np.array([H.axis[sim.debug_arr[i][0]] - x0[0] for i in range(len(sim.debug_arr))]) * (1e6 / consts.mult_const)
