@@ -26,6 +26,7 @@ def compare_2_qubit():
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
     m = 150
+    shift = 20
 
     for px in pxs:
         p_ex = np.array([1,1]) * px 
@@ -37,8 +38,8 @@ def compare_2_qubit():
 
     
         H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-        avg_PI_curr = sim.calc_op()
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+        avg_PI_curr = sim.calc_op(num_samples)
         avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
         avg_PI.append(avg_PI_curr)
         avg_gt.append(avg_gt_curr)
@@ -75,6 +76,7 @@ def compare_4_qubit():
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
     m = 150
+    shift = 20
 
     for px in pxs:
         p_ex = np.array([1,1,1,1]) * px 
@@ -86,12 +88,12 @@ def compare_4_qubit():
 
     
         H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-        avg_PI_curr = sim.calc_op()
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+        avg_PI_curr = sim.calc_op(num_samples)
         avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
         avg_PI.append(avg_PI_curr)
         avg_gt.append(avg_gt_curr)
-    config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 'num_mc_iter':num_mc_iter}
+    config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 'num_mc_iter':num_mc_iter, 'shift':shift}
     res = {'pxs':pxs, 'gt_res':avg_gt, 'PI_res':avg_PI}
     dicts = [config, res] 
     with open('four_qubits_1'+'.pickle','wb') as handle:

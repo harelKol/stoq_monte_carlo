@@ -9,7 +9,7 @@ from multiprocessing import Pool, freeze_support
 from functools import partial
 import sys 
 
-def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, n_keep):
+def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, shift, n_keep):
     p_ex = np.ones(len(I)) * px 
     C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
 
@@ -19,8 +19,8 @@ def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter,
 
     
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-    sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter)
-    avg_PI_curr = sim.calc_op()
+    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+    avg_PI_curr = sim.calc_op(num_samples)
     avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
     return avg_PI_curr, avg_gt_curr
 
@@ -43,9 +43,10 @@ def compare_2_qubit():
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
     m = 150
+    shift = 20
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
-                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, n_keep=n_keep)
     with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]
@@ -81,9 +82,10 @@ def compare_4_qubit():
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
     m = 150
+    shift = 30
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
-                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, n_keep=n_keep)
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, n_keep=n_keep)
     with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]

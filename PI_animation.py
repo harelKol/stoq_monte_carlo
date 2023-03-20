@@ -40,9 +40,10 @@ except:
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 1000 #5000
     m = 150
-    sim = PI_simulator(H, m, b, num_samples, first_num_mc_iter, num_mc_iter, debug=False, save_paths=True)
+    shift = 20
+    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, debug=False, save_paths=True)
     paths = sim.debug_arr
-    sim.calc_op()
+    sim.calc_op(num_samples)
     with open('path_to_animate.pickle', 'wb') as handle:
         pickle.dump(paths, handle, protocol=pickle.HIGHEST_PROTOCOL)
 

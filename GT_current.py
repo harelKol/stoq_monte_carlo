@@ -47,7 +47,7 @@ def gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b):
     exp_h = np.diag(np.exp(-b*E))
     avg_ops = []
     for i in range(num_qubits):
-        op_t = V.T @ ops[i] @ V 
+        op_t = V.T @ ops[i] @ V
         avg_op = np.trace(exp_h @ op_t) / np.trace(exp_h)
         avg_op /= (consts.mult_const)
         avg_op *= (1e6)
