@@ -3,6 +3,8 @@ from PI_path import PI_path_closed
 from tqdm import tqdm 
 from PI_hamiltonian import Hamiltonian
 from multiprocessing import Pool, freeze_support
+import os 
+import time 
 
 
 
@@ -36,13 +38,16 @@ class PI_simulator:
         for i in iter:
             if self.debug:
                 x = input()
-            scheme = np.random.choice([1, 2], p = [0.7, 0.3])
+            scheme = np.random.choice([1, 2, 3], p = [0.9, 0.1, 0])
             if scheme == 1:
                 self.path.local_update()
             elif scheme == 2:
                 self.path.global_update()
+            elif scheme == 3:
+                self.path.global_update(partial=True)
  
     def calc_op(self, num_samples):
+        np.random.seed((os.getpid() * int(time.time())) % 123456789)
         avg_op = 0 
         iter = tqdm(range(num_samples))
         for i in iter:
@@ -67,6 +72,7 @@ class PI_simulator:
         
     
     def calc_op_arr(self, num_samples):
+        np.random.seed((os.getpid() * int(time.time())) % 123456789)
         samples = []
         for i in tqdm(range(num_samples)):
             self.metropolis()

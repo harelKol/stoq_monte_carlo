@@ -137,3 +137,7 @@ read_plot.py
 my_env/
 four_qubits_1.pickle
 read_plot_new.py
+four_qubits_0.9_exp.pickle
+four_qubits_0.9_exp_2.pickle
+path_to_animate_2.pickle
+path_to_animate_4.pickle
