@@ -2,6 +2,7 @@ from PI_hamiltonian import Hamiltonian
 import numpy as np 
 from scipy.linalg import expm 
 from constants import consts 
+from scipy import optimize
 import time 
 
 class PI_path_closed:
@@ -63,8 +64,15 @@ class PI_path_closed:
             self.p_weight_arr[t-1] = W2_cand 
             self.v_weight_arr[t] = W3_cand
 
-    def global_update(self):
+    def global_update(self, partial = False):
         shift_vec = np.tile(np.random.choice(np.arange(-self.shift, self.shift + 1), size=self.H.num_qubits), (self.m+1,1))
+        if partial:
+            #num_qubits = np.random.choice(np.arange(self.H.num_qubits))
+            #ind = np.random.choice(np.arange(self.H.num_qubits), size = num_qubits)
+            curr_shift = np.random.choice(np.arange(-self.shift, self.shift + 1)) 
+            shift_vec = np.zeros((self.m+1,self.H.num_qubits), dtype=int)
+            shift_vec[:,np.random.choice(np.arange(self.H.num_qubits))] = curr_shift
+
         candidate = (self.path + shift_vec + self.N) % self.N
 
         v_w_cand_arr, p_w_cand_arr = self.calc_weight_arr(candidate)
@@ -82,8 +90,8 @@ class PI_path_closed:
                 print('accepted!')
             self.path = candidate 
             self.v_weight_arr, self.p_weight_arr = v_w_cand_arr, p_w_cand_arr
-
     
+
     def calc_p_term(self, path ,t):
         state1 = path[t,:]
         if t == -1:

@@ -22,10 +22,10 @@ def main(px):
                   [0, 0.2, 231, 0.2],
                   [0.2, 0, 0.2, 230]]) * (1e-12) 
 
-    #x0 = np.array([0.0001, 0.0009, 0.0001, 0.0009]) * consts.p0
-    x0 = np.array([0.0005, -0.0005, 0.0005, -0.0005]) * consts.p0
+    x0 = np.array([0.0001, 0.0001, 0.0001, 0.0009]) * consts.p0
+    #x0 = np.array([0.0005, -0.0005, 0.0005, -0.0005]) * consts.p0
 
-    p_ex = np.ones(len(I))
+    p_ex = np.ones(len(I)) * px
 
     C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
 
@@ -34,20 +34,20 @@ def main(px):
     Ej *= consts.mult_const
 
     N = 51 #number of flux discreitization points
-    x_max = 0.5 * consts.p0 #maximum flux for each squid
+    x_max = 0.9 * consts.p0 #maximum flux for each squid
     b = 4
-    num_samples = 30000 #30000
+    num_samples = 24000 #30000
     first_num_mc_iter = 1 * 500000 #1 * 100000
-    num_mc_iter = 4000 #2000
-    m = 150
-    shift = 35
+    num_mc_iter = 2000 #2000
+    m = 200 #250?
+    shift = 40
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
     sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
     op_arr = sim.calc_op_arr_mp(num_samples,num_workers=8)
 
     with open('four_qubits_0.9_exp'+'.pickle','wb') as handle:
         pickle.dump(op_arr, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        
+
     n_keep = 5
     gt = gt_pers_curr(I,C,L,x0,px,N,x_max,n_keep,b)
     means = np.zeros((num_samples, 4))
