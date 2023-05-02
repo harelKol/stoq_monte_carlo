@@ -69,7 +69,8 @@ def two_qubits_sim():
         num_mc_iter = 1000 #5000
         m = 150
         shift = 20
-        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, debug=False, save_paths=True)
+        p_arr = [0.9,0.1,0]
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr, debug=False, save_paths=True)
         sim.calc_op(num_samples)
         paths = sim.debug_arr
         with open('path_to_animate_2.pickle', 'wb') as handle:
@@ -121,8 +122,9 @@ def four_qubit_sim():
         num_mc_iter = 1000 #5000
         m = 200 #250?
         shift = 40
+        p_arr = [0.9,0.1,0]
         
-        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, debug=False, save_paths=True)
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr, debug=False, save_paths=True)
         sim.calc_op(num_samples)
         paths = sim.debug_arr
         with open('path_to_animate_4.pickle', 'wb') as handle:

@@ -1,5 +1,5 @@
 import numpy as np 
-from squid_funcs import get_hamiltonian_matrices 
+from utils import get_hamiltonian_matrices 
 from constants import consts 
 import matplotlib.pyplot as plt 
 import pickle 

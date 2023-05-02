@@ -1,5 +1,5 @@
 import numpy as np 
-from squid_funcs import get_hamiltonian_matrices 
+from utils import get_hamiltonian_matrices 
 from constants import consts 
 from PI_hamiltonian import Hamiltonian 
 from PI_sim import PI_simulator 
@@ -34,8 +34,9 @@ def main2(px):
     num_mc_iter = 2000 #5000
     m = 150
     shift = 20
+    p_arr = [0.9,0.1,0]
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr)
     avg_curr = sim.calc_op(num_samples)
     return avg_curr
     

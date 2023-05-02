@@ -9,7 +9,9 @@ from multiprocessing import Pool, freeze_support
 from functools import partial
 import sys 
 
-def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, shift, n_keep):
+def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter, num_mc_iter, shift, p_arr, n_keep):
+    if px > 0.75:
+        x_max = px * consts.p0
     p_ex = np.ones(len(I)) * px 
     C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
 
@@ -19,7 +21,7 @@ def compare_one(px, I, C, L, x0, x_max, N, m, b, num_samples, first_num_mc_iter,
 
     
     H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+    sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr)
     avg_PI_curr = sim.calc_op(num_samples)
     avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
     return avg_PI_curr, avg_gt_curr
@@ -44,9 +46,10 @@ def compare_2_qubit():
     num_mc_iter = 2000 #5000
     m = 150
     shift = 20
+    p_arr = [0.9,0.1,0]
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
-                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, n_keep=n_keep)
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, p_arr=p_arr, n_keep=n_keep)
     with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]
@@ -58,7 +61,9 @@ def compare_2_qubit():
         pickle.dump(dicts, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def compare_4_qubit():
-    pxs = [0., 0.2, 0.4, 0.6, 0.663, 0.67, 0.68, 0.7, 0.73, 0.8, 0.9, 1.]
+    # pxs = [0., 0.2, 0.4, 0.6, 0.663, 0.67, 0.68, 0.7, 0.73, 0.8, 0.9, 1.]
+    # pxs = [0., 0.2, 0.4, 0.6, 0.663, 0.67, 0.68, 0.7]
+    pxs = [0.73, 0.8, 0.9, 1.]
     I = np.array([3.227, 3.227, 3.227, 3.227]) * (1e-6)
 
 
@@ -78,23 +83,25 @@ def compare_4_qubit():
     x_max = 0.5 * consts.p0 #maximum flux for each squid
     b = 4
     n_keep = 5
-    num_samples = 20000 #5000
-    first_num_mc_iter = 1 * 100000
+    num_samples = 30000 #5000
+    first_num_mc_iter = 10 * 100000
     num_mc_iter = 2000 #5000
-    m = 150
-    shift = 30
+    m = 200
+    shift = 40
+    p_arr = [0.8,0.1,0.1]
 
     G = partial(compare_one, I=I, C=C, L=L, x0=x0, x_max=x_max, N=N, m=m, b=b, num_samples=num_samples, 
-                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, n_keep=n_keep)
+                  first_num_mc_iter=first_num_mc_iter, num_mc_iter=num_mc_iter, shift=shift, p_arr=p_arr, n_keep=n_keep)
     with Pool(len(pxs)) as p:
         out = p.map(G, pxs)
     avg_PI = [x[0] for x in out]
     avg_gt = [x[1] for x in out]
 
-    config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 'num_mc_iter':num_mc_iter}
+    config = {'N':N, 'x_max':x_max, 'b':b, 'num_samples':num_samples, 'm':m, 'first_num_mc_iter':first_num_mc_iter, 
+              'num_mc_iter':num_mc_iter, 'shift':shift, 'p_arr':p_arr}
     res = {'pxs':pxs, 'gt_res':avg_gt, 'PI_res':avg_PI}
     dicts = [config, res] 
-    with open('four_qubits_1'+'.pickle','wb') as handle:
+    with open('four_qubits_2'+'.pickle','wb') as handle:
         pickle.dump(dicts, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 

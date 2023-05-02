@@ -27,6 +27,7 @@ def compare_2_qubit():
     num_mc_iter = 2000 #5000
     m = 150
     shift = 20
+    p_arr = [0.9,0.1,0]
 
     for px in pxs:
         p_ex = np.array([1,1]) * px 
@@ -38,7 +39,7 @@ def compare_2_qubit():
 
     
         H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr)
         avg_PI_curr = sim.calc_op(num_samples)
         avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
         avg_PI.append(avg_PI_curr)
@@ -66,19 +67,22 @@ def compare_4_qubit():
                   [0, 0.2, 231, 0.2],
                   [0.2, 0, 0.2, 230]]) * (1e-12) 
 
-    x0 = np.array([0.0001, 0.0009, 0.0001, 0.0009]) * consts.p0
+    x0 = np.array([0.0001, 0.0001, 0.0001, 0.0009]) * consts.p0
 
     N = 51 #number of flux discreitization points
     x_max = 0.5 * consts.p0 #maximum flux for each squid
     b = 4
     n_keep = 5
-    num_samples = 20000 #5000
+    num_samples = 30000 #5000
     first_num_mc_iter = 1 * 100000
     num_mc_iter = 2000 #5000
-    m = 150
-    shift = 20
+    m = 200
+    shift = 30
+    p_arr = [0.9,0.1,0]
 
     for px in pxs:
+        if px > 0.7:
+            x_max = px * consts.p0
         p_ex = np.array([1,1,1,1]) * px 
         C_inv, L_inv, Ej = get_hamiltonian_matrices(I, p_ex, C, L)
 
@@ -88,7 +92,7 @@ def compare_4_qubit():
 
     
         H = Hamiltonian(C_inv, L_inv, Ej, x0, x_max, N, transform=True)
-        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift)
+        sim = PI_simulator(H, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr)
         avg_PI_curr = sim.calc_op(num_samples)
         avg_gt_curr = gt_pers_curr(I, C, L, x0, px, N, x_max, n_keep, b)
         avg_PI.append(avg_PI_curr)

@@ -9,7 +9,7 @@ import time
 
 
 class PI_simulator:
-    def __init__(self, H: Hamiltonian, m, b, first_num_mc_iter, num_mc_iter, shift, debug=False, save_paths=False):
+    def __init__(self, H: Hamiltonian, m, b, first_num_mc_iter, num_mc_iter, shift, p_arr, debug=False, save_paths=False):
         '''
         should be additional simulation params
         H : Hamiltonian class 
@@ -21,6 +21,7 @@ class PI_simulator:
         self.H = H 
         self.m = m
         self.b = b
+        self.p = p_arr
         self.num_mc_iter = num_mc_iter 
         self.first_num_mc_iter = first_num_mc_iter
         self.path = PI_path_closed(m, H, b, shift, debug=debug)
@@ -38,7 +39,7 @@ class PI_simulator:
         for i in iter:
             if self.debug:
                 x = input()
-            scheme = np.random.choice([1, 2, 3], p = [0.9, 0.1, 0])
+            scheme = np.random.choice([1, 2, 3], p = self.p)
             if scheme == 1:
                 self.path.local_update()
             elif scheme == 2:
